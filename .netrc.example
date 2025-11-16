@@ -1,0 +1,24 @@
+# Configuration .netrc pour l'authentification Gmail
+# Ce fichier doit être placé dans votre répertoire home (~/.netrc)
+#
+# Sur Unix/Linux/macOS:
+#   cp .netrc.example ~/.netrc
+#   chmod 600 ~/.netrc  # IMPORTANT : protéger le fichier
+#
+# Sur Windows:
+#   Créer le fichier %HOME%\_netrc (notez le underscore)
+#
+# ⚠️ SÉCURITÉ : Ce fichier contient des mots de passe en clair.
+# Assurez-vous que les permissions sont restrictives (600 sur Unix).
+
+machine smtp.gmail.com
+  login votre.email@gmail.com
+  password votre_mot_de_passe_application
+
+# Note pour Gmail:
+# Vous devez créer un "mot de passe d'application" :
+# 1. Allez sur https://myaccount.google.com/security
+# 2. Activez la validation en 2 étapes
+# 3. Allez dans "Mots de passe des applications"
+# 4. Créez un nouveau mot de passe pour "Mail"
+# 5. Utilisez ce mot de passe ci-dessus

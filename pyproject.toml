@@ -1,0 +1,21 @@
+[project]
+name = "happy-weekly-mailing"
+version = "0.1.0"
+description = "Script d'envoi automatique d'emails récapitulatifs des événements Happy au Rouret"
+requires-python = ">=3.11"
+dependencies = [
+    "icalendar>=5.0.13",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+    "pytz>=2024.1",
+]
+
+[project.scripts]
+send-calendar = "happy_weekly_mailing.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+package = true

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy au Rouret - Prochains événements</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive, sans-serif; background-color: #fff8e1;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fff8e1; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.15);">
+                    <!-- Header festif -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #48dbfb 100%); padding: 35px 30px; text-align: center; position: relative;">
+                            <svg width="120" height="100" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Ballons -->
+                                <ellipse cx="30" cy="40" rx="18" ry="22" fill="#ff6b6b" opacity="0.9"/>
+                                <line x1="30" y1="62" x2="30" y2="80" stroke="#333" stroke-width="1"/>
+
+                                <ellipse cx="60" cy="35" rx="18" ry="22" fill="#feca57" opacity="0.9"/>
+                                <line x1="60" y1="57" x2="60" y2="80" stroke="#333" stroke-width="1"/>
+
+                                <ellipse cx="90" cy="40" rx="18" ry="22" fill="#48dbfb" opacity="0.9"/>
+                                <line x1="90" y1="62" x2="90" y2="80" stroke="#333" stroke-width="1"/>
+
+                                <!-- Smiley -->
+                                <circle cx="60" cy="75" r="20" fill="#FFD93D" stroke="#333" stroke-width="2"/>
+                                <circle cx="53" cy="70" r="2.5" fill="#333"/>
+                                <circle cx="67" cy="70" r="2.5" fill="#333"/>
+                                <path d="M52 78 Q60 84 68 78" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            </svg>
+                            <h1 style="color: #ffffff; margin: 15px 0 8px 0; font-size: 38px; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.3); letter-spacing: 1px;">
+                                Happy au Rouret ! 🎉
+                            </h1>
+                            <p style="color: #ffffff; margin: 0; font-size: 18px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); font-weight: 600;">
+                                ✨ Vos prochains rendez-vous bonheur ✨
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Préambule festif -->
+                    <tr>
+                        <td style="padding: 30px; background: linear-gradient(to bottom, #fffbea 0%, #ffffff 100%); border-bottom: 3px dashed #feca57;">
+                            <p style="color: #444; font-size: 16px; line-height: 1.7; margin: 0; text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                                <span style="font-size: 24px;">👋</span> <strong style="color: #ff6b6b; font-size: 18px;">Coucou les Happy Rourétans !</strong>
+                                <br><br>
+                                Prêts pour de nouveaux moments de partage et de rigolade ? 😄
+                                <br>
+                                Voici le programme des prochains jours : des rencontres, des sourires et de la bonne humeur garantis !
+                                <br><br>
+                                🌻 Que vous aimiez jardiner, randonner, cuisiner ou simplement papoter autour d'un bon repas,
+                                il y en a pour tous les goûts ! Notre mission ? Créer des souvenirs joyeux entre générations !
+                                <br><br>
+                                <strong style="color: #48dbfb;">Alors, notez vite ces dates dans vos agendas ! 📝✨</strong>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Liste des événements -->
+                    <tr>
+                        <td style="padding: 25px 30px;">
+                            <h2 style="color: #ff6b6b; font-size: 28px; margin: 0 0 25px 0; font-weight: 900; text-align: center;">
+                                🎈 Au Programme 🎈
+                            </h2>
+
+                            <!-- EVENT_LOOP_START -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px; border-radius: 15px; overflow: hidden; background: linear-gradient(135deg, #fff9e6 0%, #ffe6f0 100%); border: 3px solid {event_color};">
+                                <tr>
+                                    <td style="padding: 20px;">
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="width: 85px; vertical-align: top;">
+                                                    <div style="background: {event_color}; color: #ffffff; padding: 12px; border-radius: 12px; text-align: center; box-shadow: 3px 3px 8px rgba(0,0,0,0.2);">
+                                                        <div style="font-size: 32px; font-weight: 900; line-height: 1;">{day}</div>
+                                                        <div style="font-size: 14px; text-transform: uppercase; margin-top: 3px; font-weight: 700;">{month}</div>
+                                                    </div>
+                                                </td>
+                                                <td style="padding-left: 20px; vertical-align: top;">
+                                                    <h3 style="color: {event_color}; font-size: 21px; margin: 0 0 12px 0; font-weight: 900;">
+                                                        {icon} {title}
+                                                    </h3>
+                                                    <p style="color: #555; font-size: 15px; margin: 0 0 7px 0; font-weight: 600; font-family: 'Segoe UI', sans-serif;">
+                                                        🕐 {time}
+                                                    </p>
+                                                    <p style="color: #555; font-size: 15px; margin: 0 0 7px 0; font-weight: 600; font-family: 'Segoe UI', sans-serif;">
+                                                        📍 {location}
+                                                    </p>
+                                                    {description}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- EVENT_LOOP_END -->
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer festif -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #48dbfb 100%); padding: 25px 30px; text-align: center;">
+                            <p style="color: #ffffff; font-size: 16px; margin: 0 0 10px 0; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
+                                🌐 Toutes les infos sur notre site
+                            </p>
+                            <a href="https://www.happy-au-rouret.fr/" style="background-color: #ffffff; color: #ff6b6b; text-decoration: none; font-weight: 900; font-size: 16px; padding: 10px 20px; border-radius: 25px; display: inline-block; box-shadow: 3px 3px 8px rgba(0,0,0,0.2);">
+                                www.happy-au-rouret.fr
+                            </a>
+
+                            <!-- Calendrier partagé -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin-top: 20px; background-color: rgba(255,255,255,0.95); border-radius: 15px; padding: 15px; box-shadow: 3px 3px 8px rgba(0,0,0,0.2);">
+                                <tr>
+                                    <td style="text-align: left; padding: 0 10px;">
+                                        <p style="color: #ff6b6b; font-size: 13px; margin: 0 0 8px 0; font-weight: 900;">
+                                            📅 Calendrier partagé Happy au Rouret
+                                        </p>
+                                        <p style="color: #444; font-size: 12px; margin: 0 0 8px 0; line-height: 1.6; font-weight: 600;">
+                                            Pour ne manquer aucun événement, ajoutez notre calendrier à votre application préférée (Google Agenda, Apple Calendar, Outlook, etc.) :
+                                        </p>
+                                        <p style="color: #555; font-size: 11px; margin: 0; line-height: 1.5; font-weight: 600;">
+                                            <strong style="color: #ff6b6b;">• Sur ordinateur :</strong> <a href="https://calendar.google.com/calendar/u/0/r?cid=happy.rouret@gmail.com" style="color: #48dbfb; text-decoration: underline; font-weight: 700;">Cliquez ici pour vous abonner</a><br>
+                                            <strong style="color: #ff6b6b;">• Lien direct :</strong> <a href="https://calendar.google.com/calendar/embed?src=happy.rouret%40gmail.com&ctz=Europe%2FParis" style="color: #48dbfb; text-decoration: underline; font-weight: 700;">Voir le calendrier</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="color: #ffffff; font-size: 14px; margin: 20px 0 0 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
+                                💛 Happy au Rouret • Le bonheur de se retrouver ! 💛
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
