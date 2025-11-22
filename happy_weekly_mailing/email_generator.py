@@ -66,6 +66,7 @@ class EmailGenerator:
             event_html = self._fill_event_template(event_template, event)
             events_html_parts.append(event_html)
 
+        # Joindre avec un saut de ligne
         return "\n".join(events_html_parts)
 
     def _extract_event_template(self, template: str) -> str:
@@ -79,11 +80,24 @@ class EmailGenerator:
             Template HTML d'un seul événement
         """
         # Chercher le contenu entre <!-- EVENT_LOOP_START --> et <!-- EVENT_LOOP_END -->
-        pattern = r'<!-- EVENT_LOOP_START -->(.*?)<!-- EVENT_LOOP_END -->'
+        pattern = r'<!-- EVENT_LOOP_START -->\n?(.*?)\n?<!-- EVENT_LOOP_END -->'
         match = re.search(pattern, template, re.DOTALL)
 
         if match:
-            return match.group(1).strip()
+            # Ne pas strip complètement pour préserver l'indentation relative
+            content = match.group(1)
+            # Supprimer seulement les lignes vides au début et à la fin
+            lines = content.split('\n')
+            # Trouver la première et dernière ligne non vide
+            start_idx = 0
+            end_idx = len(lines) - 1
+            while start_idx < len(lines) and not lines[start_idx].strip():
+                start_idx += 1
+            while end_idx >= 0 and not lines[end_idx].strip():
+                end_idx -= 1
+            if start_idx <= end_idx:
+                return '\n'.join(lines[start_idx:end_idx + 1])
+            return ""
 
         return ""
 
