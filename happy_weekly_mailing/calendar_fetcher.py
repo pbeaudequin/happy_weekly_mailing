@@ -2,6 +2,7 @@
 
 from datetime import datetime, timedelta
 from typing import List, Dict, Any
+from urllib.parse import quote
 import requests
 import pytz
 from icalendar import Calendar
@@ -165,6 +166,9 @@ class CalendarFetcher:
         elif 'réunion' in title_lower or 'assemblée' in title_lower:
             icon = '📋'
 
+        # Générer les liens pour ajouter au calendrier
+        calendar_links = self._generate_calendar_links(event)
+
         return {
             'day': start_dt.strftime('%d'),
             'month': self._get_french_month(start_dt.month),
@@ -174,7 +178,11 @@ class CalendarFetcher:
             'location': event['location'],
             'description': description_html,
             'event_color': colors[color_index],
-            'icon': icon
+            'icon': icon,
+            'add_to_google': calendar_links['google'],
+            'add_to_outlook': calendar_links['outlook'],
+            'add_to_yahoo': calendar_links['yahoo'],
+            'add_to_ical': calendar_links['ical']
         }
 
     @staticmethod
@@ -194,3 +202,84 @@ class CalendarFetcher:
             "Juil", "Août", "Sep", "Oct", "Nov", "Déc"
         ]
         return months[month_num - 1]
+
+    @staticmethod
+    def _generate_calendar_links(event: Dict[str, Any]) -> Dict[str, str]:
+        """
+        Génère les liens pour ajouter l'événement aux différents calendriers.
+
+        Args:
+            event: Événement avec start_datetime, end_datetime, title, description, location
+
+        Returns:
+            Dictionnaire avec les liens pour différents calendriers
+        """
+        start_dt = event['start_datetime']
+        end_dt = event.get('end_datetime')
+
+        # Si pas d'heure de fin, utiliser +2h par défaut (sauf pour événements "all day")
+        if not end_dt:
+            if event.get('is_all_day'):
+                end_dt = start_dt + timedelta(days=1)
+            else:
+                end_dt = start_dt + timedelta(hours=2)
+
+        # Format pour Google Calendar et autres : YYYYMMDDTHHmmssZ (UTC)
+        # Pour les événements "all day", utiliser le format YYYYMMDD
+        if event.get('is_all_day'):
+            start_str = start_dt.strftime('%Y%m%d')
+            end_str = end_dt.strftime('%Y%m%d')
+        else:
+            # Convertir en UTC pour les liens calendrier
+            start_utc = start_dt.astimezone(pytz.UTC)
+            end_utc = end_dt.astimezone(pytz.UTC)
+            start_str = start_utc.strftime('%Y%m%dT%H%M%SZ')
+            end_str = end_utc.strftime('%Y%m%dT%H%M%SZ')
+
+        # Encoder les paramètres
+        title = quote(event['title'])
+        description = quote(event.get('description', ''))
+        location = quote(event.get('location', ''))
+
+        # Google Calendar
+        google_url = (
+            f"https://calendar.google.com/calendar/render?"
+            f"action=TEMPLATE"
+            f"&text={title}"
+            f"&dates={start_str}/{end_str}"
+            f"&details={description}"
+            f"&location={location}"
+        )
+
+        # Outlook.com / Office 365
+        outlook_url = (
+            f"https://outlook.live.com/calendar/0/deeplink/compose?"
+            f"subject={title}"
+            f"&startdt={start_str}"
+            f"&enddt={end_str}"
+            f"&body={description}"
+            f"&location={location}"
+            f"&path=/calendar/action/compose"
+            f"&rru=addevent"
+        )
+
+        # Yahoo Calendar
+        yahoo_url = (
+            f"https://calendar.yahoo.com/?"
+            f"v=60"
+            f"&title={title}"
+            f"&st={start_str}"
+            f"&et={end_str}"
+            f"&desc={description}"
+            f"&in_loc={location}"
+        )
+
+        # Lien iCal/ICS universel (on génère un lien Google qui peut être utilisé par tous)
+        ical_url = google_url
+
+        return {
+            'google': google_url,
+            'outlook': outlook_url,
+            'yahoo': yahoo_url,
+            'ical': ical_url
+        }
