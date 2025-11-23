@@ -23,7 +23,7 @@ class CalendarFetcher:
         self.timezone = pytz.timezone(timezone)
         self.ical_url = f"https://calendar.google.com/calendar/ical/{calendar_id}/public/basic.ics"
 
-    def fetch_events(self, days_ahead: int = 14) -> List[Dict[str, Any]]:
+    def fetch_events(self, days_ahead: int = 30) -> List[Dict[str, Any]]:
         """
         Récupère les événements des prochains jours.
 
