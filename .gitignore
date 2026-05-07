@@ -46,3 +46,6 @@ Thumbs.db
 
 # uv
 .uv/
+
+# Claude Code (local-only settings)
+.claude/settings.local.json
