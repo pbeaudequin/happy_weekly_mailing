@@ -230,6 +230,48 @@ pwd
 tail -f /tmp/happy_mailing.log
 ```
 
+## 🤖 Automatisation GitHub Actions
+
+Le workflow `Send weekly mailing` peut envoyer l'email depuis GitHub Actions.
+
+Déclenchements :
+
+- Automatique : tous les dimanches à `16:00 UTC` (18h en France pendant l'heure d'été).
+- Manuel : onglet **Actions** → **Send weekly mailing** → **Run workflow**, puis choisir l'environnement `test` ou `production`.
+
+### Secrets requis
+
+À configurer dans chaque environnement GitHub Actions utilisé (`test`, `production`) :
+
+```bash
+SMTP_USER
+SMTP_PASSWORD
+TO_ADDRESSES
+```
+
+`SMTP_PASSWORD` doit être un mot de passe d'application Gmail si Gmail est utilisé. `TO_ADDRESSES` est traité comme secret pour éviter d'exposer la liste des destinataires.
+
+### Variables requises
+
+À configurer dans chaque environnement GitHub Actions utilisé :
+
+```bash
+SMTP_HOST
+SMTP_PORT
+SMTP_USE_TLS
+CALENDAR_ID
+TIMEZONE
+DAYS_AHEAD
+EMAIL_TEMPLATE
+EMAIL_SUBJECT
+FROM_NAME
+WEBSITE_RECAP_ENABLED
+WEBSITE_RECAP_BASE_URL
+WEBSITE_RECAP_LIMIT
+```
+
+`WEBSITE_RECAP_YEAR` peut rester absent pour utiliser automatiquement l'année courante.
+
 ## 📁 Structure du projet
 
 ```
