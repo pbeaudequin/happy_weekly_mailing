@@ -59,6 +59,10 @@ TO_ADDRESSES=email1@example.com,email2@example.com
 
 # Optionnel : période de récupération des événements (défaut : 14 jours)
 DAYS_AHEAD=14
+
+# Optionnel : dernières publications de la photothèque
+WEBSITE_RECAP_ENABLED=true
+WEBSITE_RECAP_LIMIT=3
 ```
 
 ## 4. Tester le script
@@ -103,6 +107,11 @@ Changez `EMAIL_TEMPLATE` dans `.env` :
 ### Aucun événement trouvé
 - Vérifiez que le calendrier Google est public
 - Changez `DAYS_AHEAD` dans `.env` (14 jours par défaut)
+
+### Pas de section photothèque
+- Vérifiez que `WEBSITE_RECAP_ENABLED=true`
+- Forcez l'année si besoin avec `WEBSITE_RECAP_YEAR=2026`
+- Le script ignore cette section si le site est temporairement indisponible
 
 ### Erreur d'authentification SMTP
 - Vérifiez que le fichier `~/.netrc` existe et contient les bonnes informations

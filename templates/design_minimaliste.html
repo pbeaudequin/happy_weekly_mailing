@@ -47,6 +47,34 @@
                         </td>
                     </tr>
 
+                    <!-- RECAP_SECTION_START -->
+                    <tr>
+                        <td style="padding: 30px 40px; border-bottom: 1px solid #f0f0f0;">
+                            <h2 style="color: #000000; font-size: 18px; margin: 0 0 6px 0; font-weight: 600; letter-spacing: -0.3px;">
+                                Dernières nouvelles
+                            </h2>
+                            <p style="color: #666666; font-size: 13px; line-height: 1.5; margin: 0 0 18px 0; font-weight: 400;">
+                                Les dernières publications de la photothèque Happy au Rouret.
+                            </p>
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <!-- RECAP_LOOP_START -->
+                                    <td width="33.33%" style="vertical-align: top; padding: 0 6px 0 0;">
+                                        <a href="{recap_url}" style="text-decoration: none;">
+                                            <img src="{recap_thumbnail_url}" alt="{recap_title}" width="100%" style="display: block; width: 100%; height: 112px; object-fit: cover; border: 0;">
+                                        </a>
+                                        <p style="color: #000000; font-size: 13px; line-height: 1.35; margin: 10px 0 0 0; font-weight: 600;">{recap_title}</p>
+                                        <p style="margin: 6px 0 0 0;">
+                                            <a href="{recap_url}" style="color: #000000; font-size: 12px; text-decoration: underline; font-weight: 400;">Voir les photos</a>
+                                        </p>
+                                    </td>
+                                    <!-- RECAP_LOOP_END -->
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- RECAP_SECTION_END -->
+
                     <!-- Liste des événements -->
                     <tr>
                         <td style="padding: 35px 40px;">

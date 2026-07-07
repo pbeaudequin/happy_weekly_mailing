@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from .calendar_fetcher import CalendarFetcher
 from .email_generator import EmailGenerator
 from .email_sender import EmailSender
+from .website_recap_fetcher import WebsiteRecapFetcher
 
 
 def load_netrc_credentials(host: str = "smtp.gmail.com"):
@@ -65,6 +66,10 @@ def load_config():
         'calendar_id': os.getenv('CALENDAR_ID', 'happy.rouret@gmail.com'),
         'timezone': os.getenv('TIMEZONE', 'Europe/Paris'),
         'days_ahead': int(os.getenv('DAYS_AHEAD', '14')),
+        'website_recap_enabled': os.getenv('WEBSITE_RECAP_ENABLED', 'true').lower() == 'true',
+        'website_recap_base_url': os.getenv('WEBSITE_RECAP_BASE_URL', 'https://www.happy-au-rouret.fr'),
+        'website_recap_year': int(os.getenv('WEBSITE_RECAP_YEAR')) if os.getenv('WEBSITE_RECAP_YEAR') else None,
+        'website_recap_limit': int(os.getenv('WEBSITE_RECAP_LIMIT', '3')),
 
         # Configuration de l'email
         'template_name': os.getenv('EMAIL_TEMPLATE', 'design_classique'),
@@ -169,8 +174,22 @@ def main():
     try:
         formatted_events = [fetcher.format_event_for_email(event) for event in events]
 
+        recap_items = []
+        if config['website_recap_enabled']:
+            print("🌐 Récupération des dernières nouvelles du site...")
+            try:
+                recap_fetcher = WebsiteRecapFetcher(
+                    base_url=config['website_recap_base_url'],
+                    timezone=config['timezone'],
+                    year=config['website_recap_year'],
+                )
+                recap_items = recap_fetcher.fetch_latest(config['website_recap_limit'])
+                print(f"   ✓ {len(recap_items)} contenu(s) récent(s) trouvé(s)")
+            except Exception as e:
+                print(f"   ⚠️  Recap site indisponible : {e}")
+
         generator = EmailGenerator(config['template_name'])
-        html_content = generator.generate(formatted_events)
+        html_content = generator.generate(formatted_events, recap_items)
 
         print(f"   ✓ Email généré ({len(html_content)} caractères)")
         print()

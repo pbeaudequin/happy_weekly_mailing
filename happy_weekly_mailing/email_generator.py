@@ -1,7 +1,8 @@
 """Module pour générer les emails HTML à partir des templates."""
 
 from pathlib import Path
-from typing import List, Dict, Any
+from html import escape
+from typing import List, Dict
 import re
 
 
@@ -22,12 +23,17 @@ class EmailGenerator:
         if not self.template_path.exists():
             raise FileNotFoundError(f"Template non trouvé : {self.template_path}")
 
-    def generate(self, events: List[Dict[str, str]]) -> str:
+    def generate(
+        self,
+        events: List[Dict[str, str]],
+        recap_items: List[Dict[str, str]] | None = None,
+    ) -> str:
         """
         Génère l'email HTML complet avec les événements.
 
         Args:
             events: Liste des événements formatés
+            recap_items: Derniers contenus du site a afficher en introduction
 
         Returns:
             HTML complet de l'email
@@ -37,9 +43,11 @@ class EmailGenerator:
 
         # Générer le HTML des événements
         events_html = self._generate_events_html(template_html, events)
+        recap_html = self._generate_recap_html(template_html, recap_items or [])
 
-        # Remplacer la section des événements dans le template
+        # Remplacer les sections dynamiques dans le template
         final_html = self._replace_events_section(template_html, events_html)
+        final_html = self._replace_recap_section(final_html, recap_html)
 
         return final_html
 
@@ -116,6 +124,74 @@ class EmailGenerator:
         pattern = r'<!-- EVENT_LOOP_START -->.*?<!-- EVENT_LOOP_END -->'
         result = re.sub(pattern, events_html, template, flags=re.DOTALL)
 
+        return result
+
+    def _generate_recap_html(
+        self,
+        template: str,
+        recap_items: List[Dict[str, str]],
+    ) -> str:
+        """
+        Génère le HTML pour les contenus récents du site.
+
+        Args:
+            template: Le template HTML complet
+            recap_items: Liste des contenus récents formatés
+
+        Returns:
+            HTML de tous les contenus récents, ou chaîne vide si aucun contenu
+        """
+        if not recap_items:
+            return ""
+
+        recap_template = self._extract_recap_template(template)
+        if not recap_template:
+            return ""
+
+        recap_html_parts = []
+        for item in recap_items:
+            recap_html_parts.append(self._fill_recap_template(recap_template, item))
+
+        return "\n".join(recap_html_parts)
+
+    def _extract_recap_template(self, template: str) -> str:
+        """Extrait le template d'un item recap."""
+        pattern = r'<!-- RECAP_LOOP_START -->\n?(.*?)\n?<!-- RECAP_LOOP_END -->'
+        match = re.search(pattern, template, re.DOTALL)
+        return match.group(1).strip() if match else ""
+
+    def _replace_recap_section(self, template: str, recap_html: str) -> str:
+        """
+        Remplace ou supprime la section recap selon les contenus disponibles.
+
+        La section complete est optionnelle pour conserver la compatibilite des
+        anciens templates et eviter un bloc vide dans l'email.
+        """
+        section_pattern = r'\n?\s*<!-- RECAP_SECTION_START -->.*?<!-- RECAP_SECTION_END -->'
+        if not re.search(section_pattern, template, re.DOTALL):
+            return template
+
+        if not recap_html:
+            return re.sub(section_pattern, "", template, flags=re.DOTALL)
+
+        loop_pattern = r'<!-- RECAP_LOOP_START -->.*?<!-- RECAP_LOOP_END -->'
+        result = re.sub(loop_pattern, recap_html, template, flags=re.DOTALL)
+        result = result.replace("<!-- RECAP_SECTION_START -->", "")
+        result = result.replace("<!-- RECAP_SECTION_END -->", "")
+        return result
+
+    def _fill_recap_template(
+        self,
+        recap_template: str,
+        recap_item: Dict[str, str],
+    ) -> str:
+        """
+        Remplit le template d'un contenu recent avec ses donnees echappees.
+        """
+        result = recap_template
+        for key, value in recap_item.items():
+            escaped_value = escape(str(value), quote=True)
+            result = result.replace(f"{{{key}}}", escaped_value)
         return result
 
     def _fill_event_template(self, event_template: str, event: Dict[str, str]) -> str:
