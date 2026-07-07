@@ -11,6 +11,7 @@ Ce script récupère automatiquement les événements du calendrier Google de l'
 ## ✨ Fonctionnalités
 
 - 📅 Récupération automatique des événements depuis Google Calendar
+- 🌐 Mise en avant des 3 dernières publications de la photothèque Happy au Rouret
 - 🎨 4 designs d'email au choix (moderne, classique, festif, minimaliste)
 - 📧 Envoi d'emails HTML professionnels
 - ⏰ Compatible avec l'exécution automatique via cron
@@ -68,6 +69,12 @@ DAYS_AHEAD=14
 EMAIL_TEMPLATE=design_classique
 EMAIL_SUBJECT=Happy au Rouret - Prochains événements
 FROM_NAME=Happy au Rouret
+
+# Récapitulatif du site Happy au Rouret
+WEBSITE_RECAP_ENABLED=true
+WEBSITE_RECAP_BASE_URL=https://www.happy-au-rouret.fr
+WEBSITE_RECAP_YEAR=
+WEBSITE_RECAP_LIMIT=3
 
 # Configuration SMTP
 SMTP_HOST=smtp.gmail.com
@@ -151,6 +158,29 @@ Le projet inclut 4 designs différents :
 4. **design_minimaliste** - Design épuré et professionnel en noir et blanc
 
 Pour changer de template, modifier la variable `EMAIL_TEMPLATE` dans `.env`.
+
+## 🌐 Récapitulatif du site
+
+Par défaut, l'email ajoute dans l'introduction les 3 dernières publications de la photothèque du site Happy au Rouret.
+
+Configuration disponible dans `.env` :
+
+```bash
+# Activer ou désactiver la section
+WEBSITE_RECAP_ENABLED=true
+
+# Site à consulter
+WEBSITE_RECAP_BASE_URL=https://www.happy-au-rouret.fr
+
+# Année à consulter. Laisser vide pour utiliser l'année courante.
+WEBSITE_RECAP_YEAR=
+
+# Nombre de publications à afficher
+WEBSITE_RECAP_LIMIT=3
+```
+
+La page utilisée est `phototheque-{année}`. Par exemple, en 2026, le script consulte `https://www.happy-au-rouret.fr/phototheque-2026`.
+Si le site est indisponible, l'email est quand même généré avec les événements du calendrier.
 
 ## 🏃 Utilisation
 
@@ -238,6 +268,7 @@ happy_weekly_mailing/
 │   ├── __init__.py
 │   ├── main.py              # Point d'entrée principal
 │   ├── calendar_fetcher.py  # Récupération des événements
+│   ├── website_recap_fetcher.py # Récupération des dernières publications du site
 │   ├── email_generator.py   # Génération des emails HTML
 │   └── email_sender.py      # Envoi des emails via SMTP
 ├── templates/
@@ -258,6 +289,13 @@ happy_weekly_mailing/
 - Vérifier que le calendrier est public
 - Vérifier l'ID du calendrier dans `.env`
 - Vérifier qu'il y a bien des événements dans la période (DAYS_AHEAD)
+
+### Pas de publications du site dans l'email
+
+- Vérifier que `WEBSITE_RECAP_ENABLED=true`
+- Vérifier que la page `phototheque-{année}` existe sur le site
+- Renseigner `WEBSITE_RECAP_YEAR=2026` pour forcer une année précise
+- Le script continue sans bloquer l'envoi si le site est temporairement indisponible
 
 ### Erreur d'authentification SMTP
 
