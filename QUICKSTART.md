@@ -94,6 +94,22 @@ pwd
 which uv
 ```
 
+## 6. Automatiser avec GitHub Actions (Optionnel)
+
+Le workflow `Send weekly mailing` envoie le mailing depuis GitHub Actions.
+
+Dans les environnements GitHub `test` et `production`, configurez les secrets :
+
+```bash
+SMTP_USER
+SMTP_PASSWORD
+TO_ADDRESSES
+```
+
+Configurez aussi les variables non sensibles déjà présentes dans `.env.example` (`SMTP_HOST`, `SMTP_PORT`, `CALENDAR_ID`, `TIMEZONE`, etc.).
+
+Pour tester manuellement : onglet **Actions** → **Send weekly mailing** → **Run workflow** → choisir `test`.
+
 ## Templates disponibles
 
 Changez `EMAIL_TEMPLATE` dans `.env` :

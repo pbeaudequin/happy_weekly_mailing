@@ -1,0 +1,88 @@
+name: Send weekly mailing
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: GitHub environment to use for variables and secrets
+        required: true
+        default: test
+        type: choice
+        options:
+          - test
+          - production
+  schedule:
+    # Sunday 18:00 Europe/Paris during summer time. GitHub cron runs in UTC.
+    - cron: "0 16 * * 0"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: send-weekly-mailing-${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'production' }}
+  cancel-in-progress: false
+
+jobs:
+  send:
+    name: Generate and send mailing
+    runs-on: ubuntu-latest
+    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'production' }}
+
+    env:
+      CALENDAR_ID: ${{ vars.CALENDAR_ID }}
+      TIMEZONE: ${{ vars.TIMEZONE }}
+      DAYS_AHEAD: ${{ vars.DAYS_AHEAD }}
+      EMAIL_TEMPLATE: ${{ vars.EMAIL_TEMPLATE }}
+      EMAIL_SUBJECT: ${{ vars.EMAIL_SUBJECT }}
+      FROM_NAME: ${{ vars.FROM_NAME }}
+      WEBSITE_RECAP_ENABLED: ${{ vars.WEBSITE_RECAP_ENABLED }}
+      WEBSITE_RECAP_BASE_URL: ${{ vars.WEBSITE_RECAP_BASE_URL }}
+      WEBSITE_RECAP_YEAR: ${{ vars.WEBSITE_RECAP_YEAR }}
+      WEBSITE_RECAP_LIMIT: ${{ vars.WEBSITE_RECAP_LIMIT }}
+      SMTP_HOST: ${{ vars.SMTP_HOST }}
+      SMTP_PORT: ${{ vars.SMTP_PORT }}
+      SMTP_USE_TLS: ${{ vars.SMTP_USE_TLS }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+      TO_ADDRESSES: ${{ secrets.TO_ADDRESSES }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Validate mailing configuration
+        run: |
+          missing=0
+          for name in SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASSWORD TO_ADDRESSES; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Required configuration $name is not set"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+      - name: Generate and send email
+        run: uv run send-calendar
+
+      - name: Summarize run
+        if: always()
+        run: |
+          {
+            echo "## Weekly mailing"
+            echo ""
+            echo "- Environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'production' }}"
+            echo "- Template: ${EMAIL_TEMPLATE:-default}"
+            echo "- Calendar: ${CALENDAR_ID:-default}"
+            echo "- Days ahead: ${DAYS_AHEAD:-default}"
+          } >> "$GITHUB_STEP_SUMMARY"
