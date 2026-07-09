@@ -17,7 +17,7 @@ class EmailGeneratorRecapTest(unittest.TestCase):
             recap_items=[
                 {
                     "recap_title": "Rando & partage <script>",
-                    "recap_url": "https://example.test/photos?x=1&y=2",
+                    "recap_url": "https://example.test/photos?x=1&y=2#jw-element-123",
                     "recap_image_url": "https://example.test/full.jpg",
                     "recap_thumbnail_url": "https://example.test/thumb.jpg",
                 }
@@ -28,7 +28,7 @@ class EmailGeneratorRecapTest(unittest.TestCase):
         self.assertNotIn("RECAP_LOOP_START", html)
         self.assertIn("Dernières nouvelles en images", html)
         self.assertIn("Rando &amp; partage &lt;script&gt;", html)
-        self.assertIn("https://example.test/photos?x=1&amp;y=2", html)
+        self.assertIn("https://example.test/photos?x=1&amp;y=2#jw-element-123", html)
         self.assertIn("https://example.test/thumb.jpg", html)
 
 

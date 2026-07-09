@@ -56,6 +56,80 @@ class WebsiteRecapFetcherTest(unittest.TestCase):
             items[1].thumbnail_url,
             "https://www.happy-au-rouret.fr/loup-thumb.jpg",
         )
+        self.assertEqual(
+            items[2].url,
+            "https://www.happy-au-rouret.fr/phototheque-2026",
+        )
+
+    def test_parse_phototheque_anchors_recap_url_to_heading_element(self):
+        html = """
+        <div id="jw-element-746830712" data-jw-element-id="746830712">
+            <div class="jw-element-imagetext-text">
+                <h3>WE &agrave; Castellane 4-5 juillet</h3>
+            </div>
+        </div>
+        <div id="jw-element-746829322" class="jw-tree-node jw-element jw-album-raster">
+            <div class="jw-album">
+                <a id="jw-album-image-39324256" class="jw-album-image" href="/castellane-high.jpg">
+                    <img class="jw-album-image__image" src="/castellane-thumb.jpg">
+                </a>
+            </div>
+        </div>
+        """
+
+        items = WebsiteRecapFetcher.parse_phototheque(
+            html,
+            "https://www.happy-au-rouret.fr/phototheque-2026",
+            limit=3,
+        )
+
+        self.assertEqual(
+            items[0].url,
+            "https://www.happy-au-rouret.fr/phototheque-2026#jw-element-746830712",
+        )
+
+    def test_parse_phototheque_falls_back_to_album_element_anchor(self):
+        html = """
+        <h3>Rando au bord de la Siagne le 5 juin 2026</h3>
+        <div id="jw-element-734590720" class="jw-tree-node jw-element jw-album-raster">
+            <a id="jw-album-image-734590721" class="jw-album-image" href="/siagne-high.jpg">
+                <img class="jw-album-image__image" src="/siagne-thumb.jpg">
+            </a>
+        </div>
+        """
+
+        items = WebsiteRecapFetcher.parse_phototheque(
+            html,
+            "https://www.happy-au-rouret.fr/phototheque-2026",
+            limit=3,
+        )
+
+        self.assertEqual(
+            items[0].url,
+            "https://www.happy-au-rouret.fr/phototheque-2026#jw-element-734590720",
+        )
+
+    def test_parse_phototheque_falls_back_to_first_visible_album_image_anchor(self):
+        html = """
+        <h3>Rando aux Balcons du Loup le 14 juin 2026</h3>
+        <a id="jw-album-image-hidden" class="jw-album-image hidden" href="/hidden-high.jpg">
+            <img class="jw-album-image__image" src="/hidden-thumb.jpg">
+        </a>
+        <a id="jw-album-image-734592077" class="jw-album-image" href="/loup-high.jpg">
+            <img class="jw-album-image__image" src="/loup-thumb.jpg">
+        </a>
+        """
+
+        items = WebsiteRecapFetcher.parse_phototheque(
+            html,
+            "https://www.happy-au-rouret.fr/phototheque-2026",
+            limit=3,
+        )
+
+        self.assertEqual(
+            items[0].url,
+            "https://www.happy-au-rouret.fr/phototheque-2026#jw-album-image-734592077",
+        )
 
     def test_parse_phototheque_returns_empty_list_without_album_items(self):
         items = WebsiteRecapFetcher.parse_phototheque(
