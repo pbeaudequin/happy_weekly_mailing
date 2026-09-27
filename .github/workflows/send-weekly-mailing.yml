@@ -12,8 +12,8 @@ on:
           - test
           - production
   schedule:
-    # Sunday 18:00 Europe/Paris during summer time. GitHub cron runs in UTC.
-    - cron: "0 16 * * 0"
+    # Sunday 18:17 Europe/Paris during summer time. GitHub cron runs in UTC.
+    - cron: "17 16 * * 0"
 
 permissions:
   contents: read
