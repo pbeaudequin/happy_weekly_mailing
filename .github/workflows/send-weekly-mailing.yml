@@ -12,8 +12,9 @@ on:
           - test
           - production
   schedule:
-    # Sunday 18:17 Europe/Paris during summer time. GitHub cron runs in UTC.
-    - cron: "17 16 * * 0"
+    # Sunday at 18:37 Europe/Paris, avoiding the top of the hour.
+    - cron: "37 18 * * 0"
+      timezone: "Europe/Paris"
 
 permissions:
   contents: read
@@ -86,3 +87,4 @@ jobs:
             echo "- Calendar: ${CALENDAR_ID:-default}"
             echo "- Days ahead: ${DAYS_AHEAD:-default}"
           } >> "$GITHUB_STEP_SUMMARY"
+
